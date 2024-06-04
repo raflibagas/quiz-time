@@ -345,7 +345,7 @@ class Main_window:
     # Fungsi untuk halaman penambahan soal (teacher)
     def add_question_page(self):
         # Judul window
-        self.window.title("Choose Role")
+        self.window.title("Add Question")
 
         # Membuat Frame
         self.add_question_frame = tk.Frame(self.window, width=512, height=384)
