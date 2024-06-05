@@ -3,6 +3,7 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
+import tkinter.scrolledtext as st
 from tkinter import Tk, Canvas, Text, Button, PhotoImage, ttk, messagebox
 
 
@@ -35,8 +36,11 @@ class Main_window:
         # Variabel untuk menampung hasil pemilihan role
         self.role_chosen = tk.StringVar()
 
-        # Variabel untuk menampung hasil pemilihan subject
+        # Variabel untuk menampung hasil pemilihan subject (teacher)
         self.subject_chosen = tk.StringVar()
+
+        # Variabel untuk menampung hasil pemilihan subject (student)
+        self.subject_quiz = tk.StringVar()
 
         # Page awal
         self.show_sign_in_page()
@@ -322,7 +326,8 @@ class Main_window:
         def role_confirm_callback():
             if self.role_chosen.get() == "Student":
                 # Ke page memilih soal
-                print("Role Student dipilih")
+                self.delete_frame()
+                self.student_home_page()
             else:
                 # Ke page upload soal
                 self.delete_frame()
@@ -506,6 +511,231 @@ class Main_window:
             self.role_choosing_page()
         # =====================================================================================================
         self.add_question_frame.place(x=0.0, y=0.0)
+
+    # Fungsi untuk halaman home (student)
+    def student_home_page(self):
+        # Judul window
+        self.window.title("Home (Student)")
+
+        # Membuat Frame
+        self.student_home_frame = tk.Frame(self.window, width=512, height=384)
+
+        # Membuat canvas
+        self.canvas = Canvas(self.student_home_frame, bg="#FFFFFF", height=384, width=512, bd=0, highlightthickness=0,
+                             relief="ridge")
+        self.canvas.place(x=0, y=0)
+
+        # Membuat kotak background krem
+        self.canvas.create_rectangle(78.0, 97.0, 433.0, 347.0, fill="#D9D9D9", outline="")
+
+        # Insert logo di kiri atas
+        self.logo_image = PhotoImage(file=relative_to_assets("app_logo.png"))
+        self.label_image = tk.Label(self.student_home_frame, image=self.logo_image, borderwidth=0)
+        self.label_image.image = self.logo_image
+        self.label_image.place(x=0.0, y=0.0)
+        self.canvas.create_rectangle(125.0, 0.0, 512.0, 67.0, fill="#28003A", outline="")
+
+        # Insert username di kanan atas
+        self.username_text = ttk.Label(self.student_home_frame, text=f"Hi, {self.logged_in_username}",
+                                       background="#28003A", foreground="#FFFFFF", font=("Inter", 12 * -1), anchor=tk.E)
+        self.username_text.place(x=150.0, y=10.0, width=350.0, height=16.0)
+
+        # =======================================Bagian Take Quiz=========================================
+        self.take_quiz_button_image = PhotoImage(file=relative_to_assets("take_quiz_button.png"))
+        self.take_quiz_button = Button(image=self.take_quiz_button_image, borderwidth=0, highlightthickness=0,command=lambda:take_quiz_button_callback(), relief="flat")
+        self.take_quiz_button.image = self.take_quiz_button_image
+        self.take_quiz_button.place(x=188.0, y=141.0, width=135.0, height=22.0)
+        def take_quiz_button_callback():
+            # Ke halaman pemilihan soal
+            self.delete_frame()
+            self.quiz_list_page()
+        # ================================================================================================
+
+        # =======================================Bagian View History======================================
+        self.view_history_button_image = PhotoImage(file=relative_to_assets("view_history_button.png"))
+        self.view_history_button = Button(image=self.view_history_button_image, borderwidth=0, highlightthickness=0,command=lambda:view_history_button_callback(), relief="flat")
+        self.view_history_button.image = self.view_history_button_image
+        self.view_history_button.place(x=188.0, y=192.0, width=135.0, height=22.0)
+        def view_history_button_callback():
+            # Ke halaman view history
+            self.delete_frame()
+            self.history_page()
+        # ================================================================================================
+
+        # =======================================Bagian Back Button=======================================
+        self.back_add_question_button_image = PhotoImage(file=relative_to_assets("back_take_quiz_button.png"))
+        self.back_add_question_button = Button(image=self.back_add_question_button_image, borderwidth=0,
+                                               highlightthickness=0,
+                                               command=lambda: back_button_callback(), relief="flat")
+        self.back_add_question_button.image = self.back_add_question_button_image
+        self.back_add_question_button.place(x=83.0, y=103.0, width=66.0, height=22.0)
+
+        def back_button_callback():
+            # Balik ke role choosing
+            self.delete_frame()
+            self.role_choosing_page()
+        # ================================================================================================
+
+        # =======================================Bagian Sign Out==========================================
+        self.sign_out_button_image = PhotoImage(file=relative_to_assets("sign_out_button.png"))
+        self.sign_out_button = Button(image=self.sign_out_button_image, borderwidth=0, highlightthickness=0,
+                                      command=lambda: sign_out_callback(), relief="flat", cursor="hand2")
+        self.sign_out_button.place(x=433.0, y=35.0, width=66.0, height=22.0)
+
+        def sign_out_callback():
+            # Ke page sign in
+            self.delete_frame()
+            self.show_sign_in_page()
+        # ================================================================================================
+
+        self.student_home_frame.place(x=0.0, y=0.0)
+
+    # Fungsi untuk halaman history (student)
+    def history_page(self):
+        # Judul window
+        self.window.title("Home (Student)")
+
+        # Membuat Frame
+        self.history_frame = tk.Frame(self.window, width=512, height=384)
+
+        # Membuat canvas
+        self.canvas = Canvas(self.history_frame, bg="#FFFFFF", height=384, width=512, bd=0, highlightthickness=0,
+                             relief="ridge")
+        self.canvas.place(x=0, y=0)
+
+        # Membuat kotak background krem
+        self.canvas.create_rectangle(78.0, 97.0, 433.0, 347.0, fill="#D9D9D9", outline="")
+
+        # Insert logo di kiri atas
+        self.logo_image = PhotoImage(file=relative_to_assets("app_logo.png"))
+        self.label_image = tk.Label(self.history_frame, image=self.logo_image, borderwidth=0)
+        self.label_image.image = self.logo_image
+        self.label_image.place(x=0.0, y=0.0)
+        self.canvas.create_rectangle(125.0, 0.0, 512.0, 67.0, fill="#28003A", outline="")
+
+        # Insert username di kanan atas
+        self.username_text = ttk.Label(self.history_frame, text=f"Hi, {self.logged_in_username}",
+                                       background="#28003A", foreground="#FFFFFF", font=("Inter", 12 * -1), anchor=tk.E)
+        self.username_text.place(x=150.0, y=10.0, width=350.0, height=16.0)
+
+        # =======================================Bagian Scroll History====================================
+        self.history = st.ScrolledText(self.history_frame, font=("Segoe UI", 10))
+        self.history.place(x=82.0, y=130.0, width=347.0, height=208.0)
+        self.history.insert(tk.INSERT, "Thio\nTriansyah\nPutra\nMuhammad\nRafli\nBagaskara\nSurya\nDharma\n")
+        self.history.configure(state='disabled')
+        # ================================================================================================
+
+        # =======================================Bagian Back Button=======================================
+        self.back_add_question_button_image = PhotoImage(file=relative_to_assets("back_take_quiz_button.png"))
+        self.back_add_question_button = Button(image=self.back_add_question_button_image, borderwidth=0,
+                                               highlightthickness=0,
+                                               command=lambda: back_button_callback(), relief="flat")
+        self.back_add_question_button.image = self.back_add_question_button_image
+        self.back_add_question_button.place(x=83.0, y=103.0, width=66.0, height=22.0)
+
+        def back_button_callback():
+            # Balik ke role choosing
+            self.delete_frame()
+            self.student_home_page()
+
+        # ================================================================================================
+
+        # =======================================Bagian Sign Out==========================================
+        self.sign_out_button_image = PhotoImage(file=relative_to_assets("sign_out_button.png"))
+        self.sign_out_button = Button(image=self.sign_out_button_image, borderwidth=0, highlightthickness=0,
+                                      command=lambda: sign_out_callback(), relief="flat", cursor="hand2")
+        self.sign_out_button.place(x=433.0, y=35.0, width=66.0, height=22.0)
+
+        def sign_out_callback():
+            # Ke page sign in
+            self.delete_frame()
+            self.show_sign_in_page()
+
+        # ================================================================================================
+
+        self.history_frame.place(x=0.0, y=0.0)
+
+    # Fungsi untuk halaman pemilihan soal (student)
+    def quiz_list_page(self):
+        # Judul window
+        self.window.title("Add Question")
+
+        # Membuat Frame
+        self.quiz_list_frame = tk.Frame(self.window, width=512, height=384)
+
+        # Membuat canvas
+        self.canvas = Canvas(self.quiz_list_frame, bg="#FFFFFF", height=384, width=512, bd=0, highlightthickness=0,
+                             relief="ridge")
+        self.canvas.place(x=0, y=0)
+
+        # Membuat kotak background krem
+        self.canvas.create_rectangle(78.0, 97.0, 433.0, 347.0, fill="#D9D9D9", outline="")
+
+        # Insert logo di kiri atas
+        self.logo_image = PhotoImage(file=relative_to_assets("app_logo.png"))
+        self.label_image = tk.Label(self.quiz_list_frame, image=self.logo_image, borderwidth=0)
+        self.label_image.image = self.logo_image
+        self.label_image.place(x=0.0, y=0.0)
+        self.canvas.create_rectangle(125.0, 0.0, 512.0, 67.0, fill="#28003A", outline="")
+
+        # Insert username di kanan atas
+        self.username_text = ttk.Label(self.quiz_list_frame, text=f"Hi, {self.logged_in_username}",
+                                       background="#28003A", foreground="#FFFFFF", font=("Inter", 12 * -1), anchor=tk.E)
+        self.username_text.place(x=150.0, y=10.0, width=350.0, height=16.0)
+
+        # Insert teks Select Subject
+        self.select_subject_text = ttk.Label(self.quiz_list_frame, text="Select Subject", background="#D9D9D9",
+                                             foreground="#000000",
+                                             font=("Inter", 12 * -1))
+        self.select_subject_text.place(x=214.0, y=100.0)
+
+        # Insert dropdown subject dengan ttk.OptionMenu
+        subject_options = ["Mathematics", "Biology"]
+        self.subject_dropdown = ttk.OptionMenu(self.quiz_list_frame, self.subject_quiz, subject_options[0],*subject_options)
+        self.subject_dropdown.place(x=196.0, y=118.0, width=120.0, height=20.0)
+
+        # =======================================Bagian Start Quiz=========================================
+        start_quiz_button_image = PhotoImage(file=relative_to_assets("start_quiz_button.png"))
+        start_quiz_button = Button(image=start_quiz_button_image, borderwidth=0, highlightthickness=0,command=lambda: start_quiz_button_callback(), relief="flat")
+        start_quiz_button.image = start_quiz_button_image
+        start_quiz_button.place(x=188.0, y=189.0, width=135.0, height=22.0)
+
+        def start_quiz_button_callback():
+            # Ke halaman pengerjaan kuis
+            print("Ke halaman pengerjaan kuis")
+        # =================================================================================================
+
+        # =======================================Bagian Back Button=======================================
+        self.back_add_question_button_image = PhotoImage(file=relative_to_assets("back_start_quiz_button.png"))
+        self.back_add_question_button = Button(image=self.back_add_question_button_image, borderwidth=0,
+                                               highlightthickness=0,
+                                               command=lambda: back_button_callback(), relief="flat")
+        self.back_add_question_button.image = self.back_add_question_button_image
+        self.back_add_question_button.place(x=83.0, y=103.0, width=66.0, height=22.0)
+
+        def back_button_callback():
+            # Balik ke role choosing
+            self.delete_frame()
+            self.student_home_page()
+
+        # ================================================================================================
+
+        # =======================================Bagian Sign Out==========================================
+        self.sign_out_button_image = PhotoImage(file=relative_to_assets("sign_out_button.png"))
+        self.sign_out_button = Button(image=self.sign_out_button_image, borderwidth=0, highlightthickness=0,
+                                      command=lambda: sign_out_callback(), relief="flat", cursor="hand2")
+        self.sign_out_button.place(x=433.0, y=35.0, width=66.0, height=22.0)
+
+        def sign_out_callback():
+            # Ke page sign in
+            self.delete_frame()
+            self.show_sign_in_page()
+
+        # ================================================================================================
+
+        self.quiz_list_frame.place(x=0.0, y=0.0)
+
+    # Fungsi untuk halaman pengerjaan kuis (student)
 
 
 
